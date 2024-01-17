@@ -6,7 +6,7 @@ import fs from "fs";
 import { Octokit } from "octokit";
 
 import config from "./config.json" assert { type: "json" };
-const { token, clientId, githubApp } = config;
+const { token, clientId, PAT } = config;
 
 const rest = new REST({ version: "10" }).setToken(token);
 
@@ -83,10 +83,10 @@ function loadErrorCatcher() {
 }
 
 function loadGithub() {
-    const octokit = new Octokit({ });
+    const octokit = new Octokit({});
+    octokit.auth({ type: "token", token: PAT });
 
-    return octokit
+    return octokit;
 }
-
 
 export { deploy_commands, loadErrorCatcher, loadGithub };
