@@ -1,0 +1,15 @@
+{
+  "name": "rhhbot",
+  "version": "1.0.0",
+  "description": "A bot that references pull requests for the RH Hideout server",
+  "main": "index.mjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^14.14.1",
+    "octokit": "^3.1.2"
+  }
+}
