@@ -29,7 +29,6 @@ export default {
 
             await interaction.editReply({ embeds: [prEMBED] });
         } catch (response) {
-            console.log(response);
             if (response.status == 404)
                 return interaction.editReply({
                     content: "This PR does not exist",
