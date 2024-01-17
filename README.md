@@ -10,6 +10,10 @@ To install the required dependencies, run
 npm install
 ```
 
+To use the GitHub API, you'll need a Personal Access Token (PAT).
+Create one at https://github.com/settings/tokens with no scopes enabled (the only data accessed is public, the PAT is needed to go from 60 to 15.000 allowed requests per hour).
+You'll need to create a config.json file (a reference config.example.json is included in the repo) for the bot to work.
+
 To launch it, run
 ```bash
 node .
