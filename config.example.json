@@ -1,7 +1,6 @@
 {
     "token" : "NeverGonneGiveYouUp",
     "clientId" : "Bot's ID",
-    "guildId" : "Working Guild ID",
     "repo": {
       "owner": "rh-hideout",
       "name": "pokeemerald-expansion"
