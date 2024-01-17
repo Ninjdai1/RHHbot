@@ -5,9 +5,5 @@
     "repo": {
       "owner": "rh-hideout",
       "name": "pokeemerald-expansion"
-    },
-    "githubApp": {
-        "id": "azerty",
-        "privateKey": "key123"
     }
 }
