@@ -6,7 +6,6 @@ export default {
     name: "messageCreate",
     async execute(message, client) {
         if (message.author.bot) return;
-        console.log(message.content)
         const matches = message.content.match(/#\d+/g);
         if(matches) {
             const matchComponents = [];
