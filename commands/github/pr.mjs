@@ -41,7 +41,7 @@ function generatePREMBED(response) {
     const EMBED = new EmbedBuilder()
         .setTitle(`#${response.data.number} - ${response.data.title}`)
         .setURL(
-            `https://github.com/${repo.owner}/${repo.name}/pulls/${response.data.number}`,
+            `https://github.com/${repo.owner}/${repo.name}/pull/${response.data.number}`,
         )
         .setAuthor({
             name: response.data.user.login,

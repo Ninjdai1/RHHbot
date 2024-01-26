@@ -29,7 +29,7 @@ function generateMatchButton(response) {
         .setComponents([
             new ButtonBuilder()
                 .setStyle(ButtonStyle.Link)
-                .setURL(`https://github.com/${repo.owner}/${repo.name}/pulls/${response.data.number}`)
+                .setURL(`https://github.com/${repo.owner}/${repo.name}/pull/${response.data.number}`)
                 .setLabel(`#${response.data.number} - ${response.data.title}`)
         ])
     return matchROW
