@@ -7,30 +7,39 @@ export default {
     async execute(message, client) {
         if (message.author.bot) return;
         const matches = message.content.match(/#\d+/g);
-        if(matches) {
+        if (matches) {
             const matchComponents = [];
-            for(const match of matches) {
+            for (const match of matches) {
                 try {
-                    const response = await client.github.request("GET /repos/{owner}/{repo}/issues/{issue_number}", {
-                        owner: repo.owner,
-                        repo: repo.name,
-                        issue_number: match.replace("#", ""),
-                    });
+                    const response = await client.github.request(
+                        "GET /repos/{owner}/{repo}/issues/{issue_number}",
+                        {
+                            owner: repo.owner,
+                            repo: repo.name,
+                            issue_number: match.replace("#", ""),
+                        },
+                    );
                     matchComponents.push(generateMatchButton(response));
-                } catch{}
+                } catch {}
             }
-            if(matchComponents.length > 0) await message.reply({ components: matchComponents.slice(0, 5), allowedMentions: { repliedUser: false } });
+            if (matchComponents.length > 0)
+                await message.reply({
+                    components: matchComponents.slice(0, 5),
+                    allowedMentions: { repliedUser: false },
+                });
         }
-    }
-}
+    },
+};
 
 function generateMatchButton(response) {
-    const matchROW = new ActionRowBuilder()
-        .setComponents([
-            new ButtonBuilder()
-                .setStyle(ButtonStyle.Link)
-                .setURL(`https://github.com/${repo.owner}/${repo.name}/pull/${response.data.number}`)
-                .setLabel(`#${response.data.number} - ${response.data.title}`)
-        ])
-    return matchROW
+    const label = `#${response.data.number} - ${response.data.title}`;
+    const matchROW = new ActionRowBuilder().setComponents([
+        new ButtonBuilder()
+            .setStyle(ButtonStyle.Link)
+            .setURL(
+                `https://github.com/${repo.owner}/${repo.name}/pull/${response.data.number}`,
+            )
+            .setLabel(label.length > 80 ? `${label.split(0, 77)}...` : label),
+    ]);
+    return matchROW;
 }
