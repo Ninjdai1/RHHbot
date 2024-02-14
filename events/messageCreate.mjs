@@ -10,17 +10,25 @@ export default {
         if (matches) {
             const matchComponents = [];
             for (const match of matches) {
+                const issue_number = Number(match.replace("#", ""));
+                if (issue_number <= 20) continue;
                 try {
                     const response = await client.github.request(
                         "GET /repos/{owner}/{repo}/issues/{issue_number}",
                         {
                             owner: repo.owner,
                             repo: repo.name,
-                            issue_number: match.replace("#", ""),
+                            issue_number: issue_number,
                         },
                     );
                     matchComponents.push(generateMatchButton(response));
-                } catch {}
+                } catch(response) {
+                    if (response.status == 404)
+                        return;
+                    else{
+                        console.log(response)
+                    }
+                }
             }
             if (matchComponents.length > 0)
                 await message.reply({
@@ -39,7 +47,7 @@ function generateMatchButton(response) {
             .setURL(
                 `https://github.com/${repo.owner}/${repo.name}/pull/${response.data.number}`,
             )
-            .setLabel(label.length > 80 ? `${label.split(0, 77)}...` : label),
+            .setLabel(label.length > 80 ? `${label.substring(0, 77)}...` : label),
     ]);
     return matchROW;
 }
