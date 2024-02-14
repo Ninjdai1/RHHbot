@@ -33,6 +33,9 @@ export default {
                 return interaction.editReply({
                     content: "This PR does not exist",
                 });
+            else{
+                console.log(response)
+            }
         }
     },
 };
@@ -48,6 +51,6 @@ function generatePREMBED(response) {
             iconURL: response.data.user.avatar_url,
             url: response.data.user.html_url,
         })
-        .setDescription(response.data.body.slice(0, 4000));
+        .setDescription(response.data?.body?.slice(0, 4000) || "*No description provided*");
     return EMBED;
 }
