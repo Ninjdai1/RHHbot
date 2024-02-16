@@ -22,19 +22,20 @@ export default {
                         },
                     );
                     matchComponents.push(generateMatchButton(response));
-                } catch(response) {
-                    if (response.status == 404)
-                        return;
-                    else{
-                        console.log(response)
+                } catch (response) {
+                    if (response.status == 404) return;
+                    else {
+                        console.log(response);
                     }
                 }
             }
-            if (matchComponents.length > 0)
-                await message.reply({
+            if (matchComponents.length > 0) {
+                const reply = await message.reply({
                     components: matchComponents.slice(0, 5),
                     allowedMentions: { repliedUser: false },
                 });
+                global.messageReplyCache[message.id] = reply;
+            }
         }
     },
 };
@@ -47,7 +48,9 @@ function generateMatchButton(response) {
             .setURL(
                 `https://github.com/${repo.owner}/${repo.name}/pull/${response.data.number}`,
             )
-            .setLabel(label.length > 80 ? `${label.substring(0, 77)}...` : label),
+            .setLabel(
+                label.length > 80 ? `${label.substring(0, 77)}...` : label,
+            ),
     ]);
     return matchROW;
 }

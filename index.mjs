@@ -37,4 +37,6 @@ deploy_commands(client, true);
   null will not change slash commands
 */
 
+global.messageReplyCache = {};
+
 client.login(token);
