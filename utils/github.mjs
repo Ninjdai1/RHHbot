@@ -9,20 +9,28 @@ async function generatePRComponentsFromMessage(message, client) {
         for (const match of matches) {
             const issue_number = Number(match.replace("#", ""));
             if (issue_number <= 20) continue;
-            try {
-                const response = await client.github.request(
-                    "GET /repos/{owner}/{repo}/issues/{issue_number}",
-                    {
-                        owner: repo.owner,
-                        repo: repo.name,
-                        issue_number: issue_number,
-                    },
-                );
-                matchComponents.push(generateMatchButton(response));
-            } catch (response) {
-                if (response.status == 404) return;
-                else {
-                    console.log(response);
+            if (global.prButtonCache[issue_number]) {
+                matchComponents.push(global.prButtonCache[issue_number]);
+            } else {
+                try {
+                    const response = await client.github.request(
+                        "GET /repos/{owner}/{repo}/issues/{issue_number}",
+                        {
+                            owner: repo.owner,
+                            repo: repo.name,
+                            issue_number: issue_number,
+                        },
+                    );
+
+                    const component = generateMatchButton(response);
+                    global.prButtonCache[issue_number] = component;
+                    matchComponents.push(component);
+
+                } catch (response) {
+                    if (response.status == 404) return;
+                    else {
+                        console.log(response);
+                    }
                 }
             }
         }
