@@ -5,10 +5,11 @@ const { repo } = config;
 async function generatePRComponentsFromMessage(message, client) {
     const matchComponents = [];
     const matches = message.content.match(/#\d+/g);
+    const fetchedMatches = [];
     if (matches) {
         for (const match of matches) {
             const issue_number = Number(match.replace("#", ""));
-            if (issue_number <= 20) continue;
+            if (issue_number <= 20 || fetchedMatches.includes(issue_number) || matchComponents.length == 5) continue;
             if (global.prButtonCache[issue_number]) {
                 matchComponents.push(global.prButtonCache[issue_number]);
             } else {
@@ -33,6 +34,7 @@ async function generatePRComponentsFromMessage(message, client) {
                     }
                 }
             }
+            fetchedMatches.push(issue_number);
         }
     }
     return matchComponents;
