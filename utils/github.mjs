@@ -4,7 +4,9 @@ const { repo } = config;
 
 async function generatePRComponentsFromMessage(message, client) {
     const matchComponents = [];
-    const matches = message.content.match(/#\d+/g);
+    const matches = message.content
+        .replace(/`[^``]*`/g)//Ignore everything between `s
+        .match(/#\d+/g);//Match # followed by any number
     const fetchedMatches = [];
     if (matches) {
         for (const match of matches) {
