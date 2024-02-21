@@ -9,7 +9,7 @@ export default {
             message,
             client,
         );
-        if (matchComponents.length > 0) {
+        if (matchComponents?.length > 0) {
             const reply = await message.reply({
                 components: matchComponents.slice(0, 5),
                 allowedMentions: { repliedUser: false },
