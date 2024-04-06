@@ -38,6 +38,9 @@ deploy_commands(client, true);
 */
 
 global.messageReplyCache = {};
-global.prButtonCache = {};
+global.prButtonCache = {
+    pret: {},
+    rhh: {}
+};
 
 client.login(token);

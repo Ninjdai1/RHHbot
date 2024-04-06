@@ -4,16 +4,23 @@ const { repo } = config;
 
 async function generatePRComponentsFromMessage(message, client) {
     const matchComponents = [];
-    const matches = message.content
+    const content = message.content
         .replace(/`[^``]*`/g)//Ignore everything between `s
-        .match(/#\d+/g);//Match # followed by any number
+        .replace(/\[(.*?)\]\(.*?\)/g)//Ignore everything inside a []()-formatted link
+    const rhhMatches = content
+        .match(/(^|\s)#\d+/g);//Match # followed by any number
+    const pretMatches = content
+        .match(/pret#\d+/g);//Match # followed by any number
+    console.log(rhhMatches, pretMatches)
+
     const fetchedMatches = [];
-    if (matches) {
-        for (const match of matches) {
+    const fetchedPretMatches = [];
+    if (rhhMatches) {
+        for (const match of rhhMatches) {
             const issue_number = Number(match.replace("#", ""));
             if (issue_number <= 20 || fetchedMatches.includes(issue_number) || matchComponents.length == 5) continue;
-            if (global.prButtonCache[issue_number]) {
-                matchComponents.push(global.prButtonCache[issue_number]);
+            if (global.prButtonCache["rhh"][issue_number]) {
+                matchComponents.push(global.prButtonCache["rhh"][issue_number]);
             } else {
                 try {
                     const response = await client.github.request(
@@ -25,11 +32,44 @@ async function generatePRComponentsFromMessage(message, client) {
                         },
                     );
 
-                    const component = generateMatchButton(response);
-                    global.prButtonCache[issue_number] = component;
+                    const component = generateMatchButton(response, repo.owner, repo.name);
+                    global.prButtonCache["rhh"][issue_number] = component;
                     matchComponents.push(component);
 
                 } catch (response) {
+                    if (response.status == 404) return;
+                    else {
+                        console.log(response);
+                    }
+                }
+            }
+            fetchedMatches.push(issue_number);
+        }
+    }
+    if (pretMatches) {
+        for (const match of pretMatches) {
+            const issue_number = Number(match.replace("pret#", ""));
+            if (issue_number <= 20 || fetchedPretMatches.includes(issue_number) || matchComponents.length == 5) continue;
+            if (global.prButtonCache["pret"][issue_number]) {
+                matchComponents.push(global.prButtonCache["pret"][issue_number]);
+            } else {
+                try {
+                    const response = await client.github.request(
+                        "GET /repos/{owner}/{repo}/issues/{issue_number}",
+                        {
+                            owner: "pret",
+                            repo: "pokeemerald",
+                            issue_number: issue_number,
+                        },
+                    );
+                    console.log(response)
+
+                    const component = generateMatchButton(response, "pret", "pokeemerald");
+                    global.prButtonCache["pret"][issue_number] = component;
+                    matchComponents.push(component);
+
+                } catch (response) {
+                    console.log(response)
                     if (response.status == 404) return;
                     else {
                         console.log(response);
@@ -43,13 +83,13 @@ async function generatePRComponentsFromMessage(message, client) {
 }
 
 
-function generateMatchButton(response) {
-    const label = `#${response.data.number} - ${response.data.title}`;
+function generateMatchButton(response, owner, name) {
+    const label = `${owner=="pret" ? "pret" : ""}#${response.data.number} - ${response.data.title}`;
     const matchROW = new ActionRowBuilder().setComponents([
         new ButtonBuilder()
             .setStyle(ButtonStyle.Link)
             .setURL(
-                `https://github.com/${repo.owner}/${repo.name}/pull/${response.data.number}`,
+                `https://github.com/${owner}/${name}/pull/${response.data.number}`,
             )
             .setLabel(
                 label.length > 80 ? `${label.substring(0, 77)}...` : label,
