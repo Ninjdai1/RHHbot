@@ -10,8 +10,7 @@ async function generatePRComponentsFromMessage(message, client) {
     const rhhMatches = content
         .match(/(^|\s)#\d+/g);//Match # followed by any number
     const pretMatches = content
-        .match(/pret#\d+/g);//Match # followed by any number
-    console.log(rhhMatches, pretMatches)
+        .match(/pret#\d+/g);//Match pret# followed by any number
 
     const fetchedMatches = [];
     const fetchedPretMatches = [];
@@ -69,7 +68,6 @@ async function generatePRComponentsFromMessage(message, client) {
                     matchComponents.push(component);
 
                 } catch (response) {
-                    console.log(response)
                     if (response.status == 404) return;
                     else {
                         console.log(response);
